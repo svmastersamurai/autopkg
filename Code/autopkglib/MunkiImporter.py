@@ -218,15 +218,16 @@ class MunkiImporter(Processor):
             self.env.get("repo_subdirectory", ""))
         # adjust the installer_item_location to match the actual location
         # and name
-        pkginfo["installer_item_location"] = uploaded_pkgpath
+        pkginfo["installer_item_location"] = uploaded_pkgpath.partition('/')[2]
 
         # import uninstaller item if needed
         if self.env.get("uninstaller_pkg_path"):
-            relative_uninstall_path = munkiimportlib.copy_item_to_repo(
+            uploaded_uninstall_path = munkiimportlib.copy_item_to_repo(
                 repo, self.env["uninstaller_pkg_path"],
                 pkginfo.get('version'),
                 self.env.get("repo_subdirectory", ""))
-            pkginfo["uninstaller_item_location"] = relative_uninstall_path
+            pkginfo["uninstaller_item_location"] = (
+                uploaded_uninstall_path.partition('/')[2])
             pkginfo["uninstallable"] = True
 
         # extract and import icon if requested
