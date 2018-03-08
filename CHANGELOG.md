@@ -1,4 +1,22 @@
-### [1.0.4](https://github.com/autopkg/autopkg/compare/v1.0.3...HEAD) (Unreleased)
+### [1.0.5](https://github.com/autopkg/autopkg/compare/v1.0.4...HEAD) (Unreleased)
+
+### [1.0.4](https://github.com/autopkg/autopkg/compare/v1.0.3...v1.0.4) (March 05, 2018)
+
+FIXES:
+
+- All GitHub API requests are now performed using curl. This fixes TLS errors with
+  GitHubReleasesInfoProvider processor and `autopkg search` functionality on macOS 10.12
+  and earlier. (GH-408)
+
+IMPROVEMENTS:
+
+- A GitHub token can now be specified in AutoPkg preferences (GITHUB_TOKEN) or in a file: ~/.autopkg_gh_token (Original PR was GH-407, code merged here as part of GH-408: https://github.com/autopkg/autopkg/commit/8e0f19b99ce24311752d1300ed408d90713e144c)
+- In parent trust info, store paths within user home as ~/some/path. When verifying
+  trust info, expand ~ to current user home directory.
+- FlatPkgUnpacker, PkgPayloadUnpacker and PkgRootCreator will now create intermediary
+  directories (GH-401)
+- URLDownloader and URLTextSearcher now accept `curl_opts` input variable to provide
+  additional arguments to curl (GH-384, GH-386)
 
 ### [1.0.3](https://github.com/autopkg/autopkg/compare/v1.0.2...v1.0.3) (September 22, 2017)
 
