@@ -27,8 +27,13 @@ class MunkiCatalogBuilder(Processor):
     """Rebuilds Munki catalogs."""
     input_variables = {
         "MUNKI_REPO": {
-            "required": True,
-            "description": "Path to the Munki repo.",
+            "description": "Munki repo URL.",
+            "required": True
+        },
+        "MUNKI_REPO_PLUGIN": {
+            "description": "Munki repo plugin. Defaults to FileRepo.",
+            "required": False,
+            "default": "FileRepo"
         },
         "munki_repo_changed": {
             "required": False,
@@ -49,7 +54,10 @@ class MunkiCatalogBuilder(Processor):
             return
 
         # Generate arguments for makecatalogs.
-        args = ["/usr/local/munki/makecatalogs", self.env["MUNKI_REPO"]]
+        args = ["/usr/local/munki/makecatalogs",
+                "--repo_url", self.env["MUNKI_REPO"]]
+        if self.env.get("MUNKI_REPO_PLUGIN"):
+            args.extend(["--plugin", self.env["MUNKI_REPO_PLUGIN"]])
 
         # Call makecatalogs.
         try:
