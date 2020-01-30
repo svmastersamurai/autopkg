@@ -53,8 +53,14 @@ class URLGetter(Processor):
                     "to one set in PATH, or /usr/bin/curl."
                 )
 
-        for path_env in os.environ["PATH"].split(":"):
-            curlbin = os.path.join(path_env, "curl")
+        curlname = "curl"
+        sep = ":"
+        if os.sys.platform == "win32":
+            sep = ";"
+            curlname = "curl.exe"
+
+        for path_env in os.environ["PATH"].split(sep):
+            curlbin = os.path.join(path_env, curlname)
             if is_executable(curlbin):
                 return curlbin
 
