@@ -19,10 +19,20 @@
 import os.path
 import tempfile
 
-from autopkglib import BUNDLE_ID, ProcessorError, is_mac
+from autopkglib import BUNDLE_ID, ProcessorError, is_mac, is_windows
 from autopkglib.URLGetter import URLGetter
 
-if is_mac():
+if is_windows():
+
+    class xattr:
+        """A stub class that will perform noop for any calls to the xattr module on platforms where it is not supported."""
+
+        @classmethod
+        def setxattr(path, name, value, position=0, options=0) -> None:
+            return None
+
+
+else:
     import xattr
 
 
@@ -115,6 +125,9 @@ class URLDownloader(URLGetter):
 
     def getxattr(self, attr):
         """Get a named xattr from a file. Return None if not present."""
+        if is_windows():
+            return None
+
         if attr in xattr.listxattr(self.env["pathname"]):
             return xattr.getxattr(self.env["pathname"], attr).decode()
         return None
@@ -307,9 +320,6 @@ class URLDownloader(URLGetter):
             self.output(f"Storing new ETag header: {header.get('etag')}")
 
     def main(self):
-        if not is_mac():
-            raise ProcessorError("This processor is Mac-only!")
-
         # Clear and initiazize data structures
         self.clear_vars()
 

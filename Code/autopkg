@@ -48,6 +48,7 @@ from autopkglib import (
     get_processor,
     globalPreferences,
     is_mac,
+    is_windows,
     log,
     log_err,
     processor_names,
@@ -517,8 +518,15 @@ def git_cmd():
                 f"'{git_path_pref}' either doesn't exist or is not executable! Falling "
                 "back to one set in PATH, or /usr/bin/git."
             )
-    for path_env in os.environ["PATH"].split(":"):
-        gitbin = os.path.join(path_env, "git")
+
+    gitname = "git"
+    sep = ":"
+    if is_windows():
+        sep = ";"
+        gitname = "git.exe"
+
+    for path_env in os.environ["PATH"].split(sep):
+        gitbin = os.path.join(path_env, gitname)
         if is_executable(gitbin):
             # take the first 'git' in PATH that we find
             return gitbin

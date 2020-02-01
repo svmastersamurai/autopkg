@@ -84,6 +84,14 @@ except ImportError:
         "WARNING: Failed 'from CoreFoundation import "
         "CFPreferencesAppSynchronize, ...' in " + __name__
     )
+    # The Foundation module is importing some types that are undefined in this case.
+    # Instead, use the types in the typing modules as stand-ins.
+    from typing import List, Dict
+    from numbers import Number
+
+    NSArray = List
+    NSDictionary = Dict
+    NSNumber = Number
 
 
 BUNDLE_ID = "com.github.autopkg"
