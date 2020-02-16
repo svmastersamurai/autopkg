@@ -92,6 +92,7 @@ except ImportError:
     NSArray = List
     NSDictionary = Dict
     NSNumber = Number
+    CFPreferencesCopyKeyList = List
 
 
 BUNDLE_ID = "com.github.autopkg"

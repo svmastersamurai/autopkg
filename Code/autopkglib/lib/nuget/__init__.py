@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .nupkg import NugetPackage
-from .nupkg_generator import NugetPackageGenerator
+from .NugetPackage import NugetPackage
+from .NugetPackageGenerator import NugetPackageGenerator
+from .ChocolateyInstallGenerator import ChocolateyInstallGenerator
 
 __all__ = [
     "NugetPackage",
     "NugetPackageGenerator",
+    "ChocolateyInstallGenerator",
 ]

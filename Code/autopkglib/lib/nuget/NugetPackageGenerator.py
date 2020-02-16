@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import ABC
+from abc import ABC, abstractmethod
+from contextlib import contextmanager
+from tempfile import TemporaryDirectory
 
-from .nupkg import NugetPackage
+from .NugetPackage import NugetPackage
+
 
 class NoPackageProvidedException(Exception):
     pass
@@ -22,17 +25,36 @@ class NoPackageProvidedException(Exception):
 
 class NugetPackageGenerator(ABC):
     """A base class which must implement the `pack` method."""
-    package: NugetPackage
 
-    def __init__(self, package):
+    package: NugetPackage
+    preserve: bool = False
+
+    def __init__(self, package, preserve=None):
         if not package:
             raise NoPackageProvidedException
 
         self.package = package
 
+        if preserve:
+            self.preserve = preserve
+
     def generate(self) -> str:
         return f"{self.package}"
 
+    @abstractmethod
     def pack(self) -> bool:
         """Creates the actual nuget package from a given nuspec."""
+
         pass
+
+    @contextmanager
+    def _create_tmpdir(self):
+        """Creates a temporary directory for subclasses to place generated content."""
+
+        try:
+            tmpdir = TemporaryDirectory()
+            yield tmpdir
+        finally:
+            if not self.preserve:
+                tmpdir.cleanup()
+
